@@ -1,8 +1,8 @@
-import TetrisGame from '@/components/stage/Stage';
+import { GameStage } from '@/components/stage/Stage';
 
 export default function HomeScreen() {
 	return (
-		<TetrisGame />
+		<GameStage />
 		// <ParallaxScrollView
 		//   headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
 		//   headerImage={

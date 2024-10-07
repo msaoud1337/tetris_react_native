@@ -2,7 +2,10 @@ import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const TetrisGame = () => {
+export const createStage = () =>
+	Array.from(Array(12), () => Array(20).fill({ value: 0, isClear: true }));
+
+export const GameStage = () => {
 	const { width, height } = Dimensions.get('window');
 
 	const gridWidth = width * 0.95;
@@ -47,5 +50,3 @@ const styles = StyleSheet.create({
 		borderColor: '#000',
 	},
 });
-
-export default TetrisGame;

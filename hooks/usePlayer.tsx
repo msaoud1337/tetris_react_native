@@ -1,5 +1,5 @@
 import { TETROMINOS } from '@/utils/setup';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export type PLAYER = {
 	pos: {
@@ -19,12 +19,13 @@ export const randomTetromino = () => {
 export const usePlayer = () => {
 	const [player, setPlayer] = useState<PLAYER | undefined>(undefined);
 
-	const resetPlayer = () => {
+	const resetPlayer = useCallback(() => {
 		setPlayer({
-			pos: { x: 0, y: 0 },
+			pos: { x: 12 / 2 - 2, y: 0 },
 			tetromino: randomTetromino().shape,
 			collided: false,
 		});
-	};
+	}, []);
+
 	return { player, setPlayer, resetPlayer };
 };
