@@ -46,13 +46,13 @@ export const GameStage = () => {
 						{ width: adjustedGridWidth, height: adjustedGridHeight },
 					]}
 				>
-					{stage?.map((row) =>
-						row.map((cell, index) => {
+					{stage?.map((row, y) =>
+						row.map((cell, x) => {
 							const backgroundColor =
 								TETROMINOS[cell.value as keyof typeof TETROMINOS]?.color;
 							return (
 								<View
-									key={index}
+									key={`y${y}-x${x}-v${cell.value}}`}
 									style={[
 										styles.square,
 										{
