@@ -1,8 +1,19 @@
-import { GameStage } from '@/components/stage/Stage';
+import { createStage, GameStage } from '@/components/stage/Stage';
+import { usePlayer } from '@/hooks/usePlayer';
+import { useStage } from '@/hooks/useStage';
+import { useEffect } from 'react';
 
 export default function HomeScreen() {
+	const { player, resetPlayer } = usePlayer();
+	const { stage, setStage } = useStage(player);
+
+	useEffect(() => {
+		setStage(createStage());
+		resetPlayer();
+	}, []);
+
 	return (
-		<GameStage />
+		<GameStage stage={stage} />
 		// <ParallaxScrollView
 		//   headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
 		//   headerImage={

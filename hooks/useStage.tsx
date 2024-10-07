@@ -5,7 +5,7 @@ import { PLAYER } from './usePlayer';
 export type STAGECELL = { value: number | string; isClear: boolean };
 export type STAGE = STAGECELL[][];
 
-export const useStage = (player: PLAYER) => {
+export const useStage = (player?: PLAYER) => {
 	const [stage, setStage] = useState<STAGE>(createStage());
 
 	useEffect(() => {
@@ -14,12 +14,12 @@ export const useStage = (player: PLAYER) => {
 				line.map((cell) => (cell.isClear ? { value: 0, isClear: true } : cell)),
 			);
 
-			player.tetromino.forEach((row, y) => {
+			player?.tetromino.forEach((row, y) => {
 				row.forEach((cell, x) => {
 					if (cell !== 0)
-						newStage[y + player.pos.y][x + player.pos.x] = {
+						newStage[y + player?.pos.y][x + player?.pos.x] = {
 							value: cell,
-							isClear: player.collided ? true : false,
+							isClear: player?.collided ? true : false,
 						};
 				});
 			});
@@ -27,7 +27,7 @@ export const useStage = (player: PLAYER) => {
 		};
 
 		setStage((prevState) => updatedStage(prevState));
-	}, [player.collided, player.pos?.x, player.pos?.y, player.tetromino]);
+	}, [player?.collided, player?.pos?.x, player?.pos?.y, player?.tetromino]);
 
 	return { stage, setStage };
 };

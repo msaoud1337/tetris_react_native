@@ -1,11 +1,13 @@
+import { STAGE } from '@/hooks/useStage';
+import { TETROMINOS } from '@/utils/setup';
 import React from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const createStage = () =>
-	Array.from(Array(12), () => Array(20).fill({ value: 0, isClear: true }));
+	Array.from(Array(20), () => Array(12).fill({ value: 0, isClear: true }));
 
-export const GameStage = () => {
+export const GameStage = ({ stage }: { stage: STAGE }) => {
 	const { width, height } = Dimensions.get('window');
 
 	const gridWidth = width * 0.95;
@@ -21,12 +23,25 @@ export const GameStage = () => {
 			<View
 				style={[styles.container, { width: adjustedGridWidth, height: adjustedGridHeight }]}
 			>
-				{Array.from({ length: 12 * 20 }).map((_, index) => (
-					<View
-						key={index}
-						style={[styles.square, { width: squareSize - 0.2, height: squareSize }]}
-					/>
-				))}
+				{stage?.map((row) =>
+					row.map((cell, index) => {
+						const backgroundColor =
+							TETROMINOS[cell.value as keyof typeof TETROMINOS]?.color;
+						return (
+							<View
+								key={index}
+								style={[
+									styles.square,
+									{
+										width: squareSize - 0.2,
+										height: squareSize,
+										backgroundColor,
+									},
+								]}
+							/>
+						);
+					}),
+				)}
 			</View>
 		</SafeAreaView>
 	);
