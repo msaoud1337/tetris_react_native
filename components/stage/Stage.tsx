@@ -39,7 +39,6 @@ export const GameStage = () => {
 						return true;
 					}
 				}
-				//
 			}
 		}
 		return false;
@@ -48,7 +47,10 @@ export const GameStage = () => {
 	const onHandlerStateChange = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
 		if (e.nativeEvent.translationX > 100 && !checkMove(player!, stage, { dirX: 1, dirY: 0 })) {
 			updatePlayerPos({ x: 1, y: 0 });
-		} else if (e.nativeEvent.translationX < -100) {
+		} else if (
+			e.nativeEvent.translationX < -100 &&
+			!checkMove(player!, stage, { dirX: -1, dirY: 0 })
+		) {
 			updatePlayerPos({ x: -1, y: 0 });
 		}
 	};
@@ -63,7 +65,7 @@ export const GameStage = () => {
 
 	useEffect(() => {
 		resetPlayer();
-		setDropInterval(3000);
+		setDropInterval(500);
 	}, []);
 
 	return (
