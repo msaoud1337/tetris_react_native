@@ -1,6 +1,6 @@
-import { createStage, useStage } from '@/hooks/useStage';
+import { STAGE, useStage } from '@/hooks/useStage';
 import { TETROMINOS } from '@/utils/setup';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -8,7 +8,9 @@ import {
 	PanGestureHandler,
 	PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler';
-import { usePlayer } from '@/hooks/usePlayer';
+import { PLAYER, usePlayer } from '@/hooks/usePlayer';
+import { useInterval } from '@/hooks/useInterval';
+import { ThemedText } from '../ThemedText';
 
 const { width, height } = Dimensions.get('window');
 
@@ -21,20 +23,47 @@ const adjustedGridWidth = squareSize * 12;
 const adjustedGridHeight = squareSize * 20;
 
 export const GameStage = () => {
+	const [dropInterval, setDropInterval] = useState<null | number>(null);
 	const { player, resetPlayer, updatePlayerPos } = usePlayer();
-	const { stage, setStage } = useStage(player);
+	const { stage } = useStage(player);
+
+	const checkMove = (
+		player: PLAYER,
+		stage: STAGE,
+		{ dirX, dirY }: { dirX: number; dirY: number },
+	) => {
+		for (let y = 0; y < player.tetromino.length; y += 1) {
+			for (let x = 0; x < player.tetromino[y].length; x++) {
+				if (player.tetromino[y][x] !== 0) {
+					if (!stage[y + player.pos.y + dirY][x + player.pos.x + dirX]) {
+						return true;
+					}
+				}
+				//
+			}
+		}
+		return false;
+	};
 
 	const onHandlerStateChange = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
-		if (e.nativeEvent.translationX > 100) {
+		if (e.nativeEvent.translationX > 100 && !checkMove(player!, stage, { dirX: 1, dirY: 0 })) {
 			updatePlayerPos({ x: 1, y: 0 });
 		} else if (e.nativeEvent.translationX < -100) {
 			updatePlayerPos({ x: -1, y: 0 });
 		}
 	};
 
+	const drop = () => {
+		updatePlayerPos({ x: 0, y: 1 });
+	};
+
+	useInterval(() => {
+		drop();
+	}, dropInterval);
+
 	useEffect(() => {
-		setStage(createStage());
 		resetPlayer();
+		setDropInterval(3000);
 	}, []);
 
 	return (
@@ -67,6 +96,23 @@ export const GameStage = () => {
 					)}
 				</View>
 			</PanGestureHandler>
+			<View style={[{ width: adjustedGridWidth, height: squareSize, flexDirection: 'row' }]}>
+				{Array.from({ length: 12 })?.map((_, index) => (
+					<ThemedText
+						key={`y${index}`}
+						style={[
+							{
+								width: squareSize,
+								height: squareSize,
+								textAlign: 'center',
+								textAlignVertical: 'center',
+							},
+						]}
+					>
+						{index}
+					</ThemedText>
+				))}
+			</View>
 		</SafeAreaView>
 	);
 };
