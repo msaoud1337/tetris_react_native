@@ -81,11 +81,11 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		borderWidth: 1,
-		borderColor: '#000',
+		borderColor: 'red',
 	},
 	square: {
 		backgroundColor: '#ccc',
-		borderWidth: 1,
+		borderWidth: 0.5,
 		borderColor: '#000',
 	},
 });
