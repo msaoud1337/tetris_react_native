@@ -51,14 +51,25 @@ export const GameStage = () => {
 	};
 
 	const onHandlerStateChange = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
-		if (e.nativeEvent.translationX > 20 && !checkMove(player!, stage, { dirX: 1, dirY: 0 })) {
+		if (e.nativeEvent.translationX > 30 && !checkMove(player!, stage, { dirX: 1, dirY: 0 }))
 			updatePlayerPos({ x: 1, y: 0 });
-		} else if (
-			e.nativeEvent.translationX < -20 &&
+		else if (
+			e.nativeEvent.translationX < -30 &&
 			!checkMove(player!, stage, { dirX: -1, dirY: 0 })
-		) {
+		)
 			updatePlayerPos({ x: -1, y: 0 });
-		}
+		else if (
+			e.nativeEvent.translationY > 20 &&
+			e.nativeEvent.translationY < 500 &&
+			!checkMove(player!, stage, { dirX: 0, dirY: 2 })
+		)
+			updatePlayerPos({ x: 0, y: 2 });
+		else if (
+			e.nativeEvent.translationY > 20 &&
+			e.nativeEvent.translationY < 200 &&
+			!checkMove(player!, stage, { dirX: 0, dirY: 1 })
+		)
+			updatePlayerPos({ x: 0, y: 1 });
 	};
 
 	const drop = () => {
