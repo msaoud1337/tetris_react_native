@@ -27,8 +27,6 @@ export const GameStage = () => {
 	const { player, resetPlayer, updatePlayerPos } = usePlayer();
 	const { stage } = useStage(player, resetPlayer);
 
-	const [stop, setIsStop] = useState(false);
-
 	const checkMove = (
 		player: PLAYER,
 		stage: STAGE,
@@ -67,18 +65,17 @@ export const GameStage = () => {
 		if (!checkMove(player!, stage, { dirX: 0, dirY: 1 })) {
 			updatePlayerPos({ x: 0, y: 1 });
 		} else {
-			setIsStop(true);
-			// updatePlayerPos({ x: 0, y: -1, collided : true });
+			updatePlayerPos({ x: 0, y: 0, collided: true });
 		}
 	};
 
 	useInterval(() => {
-		if (!stop) drop();
+		drop();
 	}, dropInterval);
 
 	useEffect(() => {
 		resetPlayer();
-		setDropInterval(500);
+		setDropInterval(2000);
 	}, []);
 
 	return (

@@ -3,12 +3,30 @@ export const STAGE_HEIGHT = 20;
 
 export const TETROMINOS = {
 	'0': { shape: [[0]], color: '0, 0, 0' },
+	'.': {
+		shape: [['.']],
+		color: 'red',
+	},
 	I: {
 		shape: [
 			[0, 'I', 0, 0],
 			[0, 'I', 0, 0],
 			[0, 'I', 0, 0],
 			[0, 'I', 0, 0],
+		],
+		color: 'red',
+	},
+	U: {
+		shape: [
+			['U', 0, 'U'],
+			['U', 'U', 'U'],
+		],
+		color: 'red',
+	},
+	'7': {
+		shape: [
+			[0, '7', '7'],
+			[0, 0, '7'],
 		],
 		color: 'red',
 	},
