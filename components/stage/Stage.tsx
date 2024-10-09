@@ -25,7 +25,9 @@ const adjustedGridHeight = squareSize * 20;
 export const GameStage = () => {
 	const [dropInterval, setDropInterval] = useState<null | number>(null);
 	const { player, resetPlayer, updatePlayerPos } = usePlayer();
-	const { stage } = useStage(player);
+	const { stage } = useStage(player, resetPlayer);
+
+	const [stop, setIsStop] = useState(false);
 
 	const checkMove = (
 		player: PLAYER,
@@ -33,9 +35,15 @@ export const GameStage = () => {
 		{ dirX, dirY }: { dirX: number; dirY: number },
 	) => {
 		for (let y = 0; y < player.tetromino.length; y += 1) {
-			for (let x = 0; x < player.tetromino[y].length; x++) {
+			for (let x = 0; x < player.tetromino[y].length; x += 1) {
 				if (player.tetromino[y][x] !== 0) {
-					if (!stage[y + player.pos.y + dirY][x + player.pos.x + dirX]) {
+					if (
+						!stage[y + player.pos.y + dirY] ||
+						(stage[y + player.pos.y + dirY] &&
+							!stage[y + player.pos.y + dirY][x + player.pos.x + dirX]) ||
+						(stage[y + player.pos.y + dirY] &&
+							stage[y + player.pos.y + dirY][x + player.pos.x + dirX]?.isMerged)
+					) {
 						return true;
 					}
 				}
@@ -45,10 +53,10 @@ export const GameStage = () => {
 	};
 
 	const onHandlerStateChange = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
-		if (e.nativeEvent.translationX > 100 && !checkMove(player!, stage, { dirX: 1, dirY: 0 })) {
+		if (e.nativeEvent.translationX > 20 && !checkMove(player!, stage, { dirX: 1, dirY: 0 })) {
 			updatePlayerPos({ x: 1, y: 0 });
 		} else if (
-			e.nativeEvent.translationX < -100 &&
+			e.nativeEvent.translationX < -20 &&
 			!checkMove(player!, stage, { dirX: -1, dirY: 0 })
 		) {
 			updatePlayerPos({ x: -1, y: 0 });
@@ -56,11 +64,16 @@ export const GameStage = () => {
 	};
 
 	const drop = () => {
-		updatePlayerPos({ x: 0, y: 1 });
+		if (!checkMove(player!, stage, { dirX: 0, dirY: 1 })) {
+			updatePlayerPos({ x: 0, y: 1 });
+		} else {
+			setIsStop(true);
+			// updatePlayerPos({ x: 0, y: -1, collided : true });
+		}
 	};
 
 	useInterval(() => {
-		drop();
+		if (!stop) drop();
 	}, dropInterval);
 
 	useEffect(() => {
