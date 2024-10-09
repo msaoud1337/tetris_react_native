@@ -11,6 +11,7 @@ import {
 import { PLAYER, usePlayer } from '@/hooks/usePlayer';
 import { useInterval } from '@/hooks/useInterval';
 import { ThemedText } from '../ThemedText';
+import { checkMove } from '@/utils/functions';
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,30 +25,35 @@ const adjustedGridHeight = squareSize * 20;
 
 export const GameStage = () => {
 	const [dropInterval, setDropInterval] = useState<null | number>(null);
-	const { player, resetPlayer, updatePlayerPos } = usePlayer();
+	const { player, resetPlayer, updatePlayerPos, setPlayer } = usePlayer();
 	const { stage } = useStage(player, resetPlayer);
 
-	const checkMove = (
-		player: PLAYER,
-		stage: STAGE,
-		{ dirX, dirY }: { dirX: number; dirY: number },
-	) => {
-		for (let y = 0; y < player.tetromino.length; y += 1) {
-			for (let x = 0; x < player.tetromino[y].length; x += 1) {
-				if (player.tetromino[y][x] !== 0) {
-					if (
-						!stage[y + player.pos.y + dirY] ||
-						(stage[y + player.pos.y + dirY] &&
-							!stage[y + player.pos.y + dirY][x + player.pos.x + dirX]) ||
-						(stage[y + player.pos.y + dirY] &&
-							stage[y + player.pos.y + dirY][x + player.pos.x + dirX]?.isMerged)
-					) {
-						return true;
-					}
-				}
+	const rotate = (matrix: PLAYER['tetromino']) => {
+		// Make the rows to become cols (transpose)
+		const mtrx = matrix.map((_, i) => matrix.map((column) => column[i]));
+		// Reverse each row to get a rotated matrix
+		return mtrx.map((row) => row.reverse());
+	};
+
+	const playerRotate = (stage: STAGE): void => {
+		if (!player) return;
+		const clonedPlayer = { ...player };
+
+		clonedPlayer.tetromino = rotate(clonedPlayer.tetromino!);
+
+		const posX = clonedPlayer.pos.x;
+		let offset = 1;
+		while (checkMove(clonedPlayer, stage, { dirX: 0, dirY: 0 })) {
+			clonedPlayer.pos.x += offset;
+			offset = -(offset + (offset > 0 ? 1 : -1));
+
+			if (offset > clonedPlayer.tetromino[0].length) {
+				clonedPlayer.pos.x = posX;
+				return;
 			}
 		}
-		return false;
+
+		setPlayer(clonedPlayer);
 	};
 
 	const onHandlerStateChange = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
@@ -70,6 +76,7 @@ export const GameStage = () => {
 			!checkMove(player!, stage, { dirX: 0, dirY: 1 })
 		)
 			updatePlayerPos({ x: 0, y: 1 });
+		else if (e.nativeEvent.translationY < -100) playerRotate(stage);
 	};
 
 	const drop = () => {
@@ -86,7 +93,7 @@ export const GameStage = () => {
 
 	useEffect(() => {
 		resetPlayer();
-		setDropInterval(2000);
+		setDropInterval(1000);
 	}, []);
 
 	return (
