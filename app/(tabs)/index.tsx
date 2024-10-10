@@ -1,5 +1,5 @@
 // import { GameStage } from '@/components/stage/Stage';
-import { Dimensions, FlatList, View } from 'react-native';
+import { Dimensions, FlatList, Text, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const { width, height } = Dimensions.get('window');
@@ -36,15 +36,32 @@ export default function HomeScreen() {
 				<View
 					style={{
 						height: 150,
-						width: 1000,
-						backgroundColor: 'red',
-						transform: [{ rotate: '5deg' }],
+						width: '100%',
+						backgroundColor: '#252c93',
 						position: 'absolute',
 						top: 0,
-						left: 0,
+						right: 0,
 						zIndex: 1,
+						flexDirection: 'row',
+						justifyContent: 'center',
+						alignItems: 'flex-end',
 					}}
-				></View>
+				>
+					<View style={{ width: '20%', backgroundColor: '#161a58', marginBottom: 10 }}>
+						<Text
+							style={{
+								textAlign: 'center',
+								paddingTop: 4,
+								color: '#59c2f4',
+								fontSize: 20,
+								fontWeight: 600,
+								fontFamily: 'PressStart2P',
+							}}
+						>
+							TIME
+						</Text>
+					</View>
+				</View>
 				<FlatList
 					data={Array.from({ length: nbOfRow })}
 					renderItem={({ index }) => <Row rowIndex={index} />}
