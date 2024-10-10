@@ -92,6 +92,7 @@ export const GameStage = () => {
 											{
 												width: squareSize,
 												height: squareSize,
+												borderWidth: !cell.isMerged ? 0.3 : 0,
 												backgroundColor: !cell.isMerged
 													? TETROMINOS[
 															cell.value as keyof typeof TETROMINOS
@@ -122,7 +123,6 @@ const styles = StyleSheet.create({
 	},
 	square: {
 		backgroundColor: '#ccc',
-		borderWidth: 0.3,
 		borderColor: '#000',
 	},
 });
