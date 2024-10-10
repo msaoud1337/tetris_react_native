@@ -1,4 +1,4 @@
-export const STAGE_WIDTH = 12;
+export const STAGE_WIDTH = 10;
 export const STAGE_HEIGHT = 20;
 
 export const COLORS = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FFA500', '#800080', '#00FFFF'];

@@ -5,10 +5,20 @@ export type STAGECELL = { value: number | string; isMerged: boolean };
 export type STAGE = STAGECELL[][];
 
 export const createStage = () =>
-	Array.from(Array(20), () => Array(12).fill({ value: 0, isMerged: false }));
+	Array.from(Array(20), () => Array(10).fill({ value: 0, isMerged: false }));
 
 export const useStage = (player: PLAYER | undefined, resetPlayer: () => void) => {
 	const [stage, setStage] = useState<STAGE>(createStage());
+
+	const checkRows = (newStage: STAGE) => {
+		const updatedStage = newStage.map((row) => {
+			if (row.every((cell) => cell.isMerged)) {
+				return Array(10).fill({ value: 0, isMerged: false });
+			}
+			return row;
+		});
+		return updatedStage;
+	};
 
 	useEffect(() => {
 		if (!player?.pos) return;
@@ -35,7 +45,7 @@ export const useStage = (player: PLAYER | undefined, resetPlayer: () => void) =>
 
 			if (player.collided) {
 				resetPlayer();
-				return newStage;
+				return checkRows(newStage);
 			}
 			return newStage;
 		};
