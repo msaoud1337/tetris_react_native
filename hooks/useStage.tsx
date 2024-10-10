@@ -11,9 +11,11 @@ export const useStage = (player: PLAYER | undefined, resetPlayer: () => void) =>
 	const [stage, setStage] = useState<STAGE>(createStage());
 
 	const checkRows = (newStage: STAGE) => {
-		const updatedStage = newStage.map((row) => {
+		const updatedStage = newStage.forEach((row) => {
 			if (row.every((cell) => cell.isMerged)) {
-				return Array(10).fill({ value: 0, isMerged: false });
+				const fulledRow = newStage.indexOf(row);
+				newStage.splice(fulledRow, 1);
+				newStage.unshift(Array(10).fill({ value: 0, isMerged: false }));
 			}
 			return row;
 		});
@@ -44,8 +46,8 @@ export const useStage = (player: PLAYER | undefined, resetPlayer: () => void) =>
 			});
 
 			if (player.collided) {
+				checkRows(newStage);
 				resetPlayer();
-				return checkRows(newStage);
 			}
 			return newStage;
 		};
