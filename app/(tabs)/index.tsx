@@ -2,7 +2,7 @@ import { GameBackground } from '@/components/GameBackground';
 import { GameHeader } from '@/components/GameHeader';
 import { GameStage } from '@/components/stage/Stage';
 import { createContext, Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { SafeAreaView, View } from 'react-native';
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -49,13 +49,15 @@ export default function HomeScreen() {
 
 	return (
 		<Context.Provider value={{ time, ...game, setIsGame }}>
-			<View style={{ flex: 1, position: 'absolute' }}>
-				<GameHeader minutes={time.minutes} seconds={time.seconds} />
-				<GameBackground />
-			</View>
-			<GestureHandlerRootView>
-				<GameStage />
-			</GestureHandlerRootView>
+			<SafeAreaView style={{ flex: 1 }}>
+				<View style={{ flex: 1, position: 'absolute' }}>
+					<GameHeader minutes={time.minutes} seconds={time.seconds} />
+					<GameBackground />
+				</View>
+				<GestureHandlerRootView>
+					<GameStage />
+				</GestureHandlerRootView>
+			</SafeAreaView>
 		</Context.Provider>
 	);
 }

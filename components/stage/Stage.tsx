@@ -1,8 +1,7 @@
 import { useStage } from '@/hooks/useStage';
 import { TETROMINOS } from '@/utils/setup';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { View, StyleSheet } from 'react-native';
 import {
 	HandlerStateChangeEvent,
 	PanGestureHandler,
@@ -11,16 +10,6 @@ import {
 import { usePlayer } from '@/hooks/usePlayer';
 import { useInterval } from '@/hooks/useInterval';
 import { checkMove } from '@/utils/functions';
-
-const { width, height } = Dimensions.get('window');
-
-const gridWidth = width * 0.95;
-const gridHeight = (height - 50) * 0.9;
-
-const squareSize = Math.min(gridWidth / 10, gridHeight / 20);
-
-const adjustedGridWidth = squareSize * 10 + 1;
-const adjustedGridHeight = squareSize * 20;
 
 export const GameStage = () => {
 	const [dropInterval, setDropInterval] = useState<null | number>(null);
@@ -68,46 +57,43 @@ export const GameStage = () => {
 	}, []);
 
 	return (
-		<SafeAreaView style={styles.safeEreaContainer}>
-			<Text>Hello world</Text>
-			<PanGestureHandler onHandlerStateChange={onHandlerStateChange}>
-				<View
-					style={[
-						{
-							display: 'flex',
-							flexDirection: 'column',
-							width: adjustedGridWidth,
-							height: adjustedGridHeight,
-						},
-					]}
-				>
-					{stage?.map((row, y) => {
-						return (
-							<View key={`row-${y}`} style={styles.container}>
-								{row.map((cell, x) => (
-									<View
-										key={`y${y}-x${x}-v${cell.value}}`}
-										style={[
-											styles.square,
-											{
-												width: squareSize,
-												height: squareSize,
-												borderWidth: !cell.isMerged ? 0.3 : 0,
-												backgroundColor: !cell.isMerged
-													? TETROMINOS[
-															cell.value as keyof typeof TETROMINOS
-														]?.color
-													: 'red',
-											},
-										]}
-									/>
-								))}
-							</View>
-						);
-					})}
-				</View>
-			</PanGestureHandler>
-		</SafeAreaView>
+		<PanGestureHandler onHandlerStateChange={onHandlerStateChange}>
+			<View
+				style={[
+					{
+						marginTop: 100,
+						borderWidth: 2,
+						borderColor: '#252c93',
+						marginBottom: 10,
+						marginHorizontal: 20,
+						flex: 1,
+					},
+				]}
+			>
+				{stage?.map((row, y) => {
+					return (
+						<View key={`row-${y}`} style={[styles.container, { flex: 1 }]}>
+							{row.map((cell, x) => (
+								<View
+									key={`y${y}-x${x}-v${cell.value}}`}
+									style={[
+										styles.square,
+										{
+											flex: 1,
+											borderWidth: !cell.isMerged ? 0.3 : 0,
+											backgroundColor: !cell.isMerged
+												? TETROMINOS[cell.value as keyof typeof TETROMINOS]
+														?.color
+												: 'red',
+										},
+									]}
+								/>
+							))}
+						</View>
+					);
+				})}
+			</View>
+		</PanGestureHandler>
 	);
 };
 
