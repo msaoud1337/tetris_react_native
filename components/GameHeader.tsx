@@ -1,5 +1,6 @@
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { ThemedText } from './ThemedText';
+import { useGame } from '@/hooks/useGame';
 
 const HeaderBox = ({
 	title,
@@ -42,6 +43,7 @@ const HeaderBox = ({
 };
 
 export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: number }) => {
+	const { rowCleared } = useGame();
 	return (
 		<View
 			style={{
@@ -49,13 +51,14 @@ export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: num
 				width: '100%',
 				backgroundColor: '#252c93',
 				position: 'absolute',
-				top: 0,
+				top: -6,
 				right: 0,
 				zIndex: 1,
 				flexDirection: 'row',
 				justifyContent: 'center',
 				alignItems: 'flex-end',
 				gap: 10,
+				transform: [{ skewY: '-3deg' }],
 			}}
 		>
 			<HeaderBox title={'TIME'} content={`${minutes.toString()}:${seconds.toString()}`} />
@@ -66,7 +69,7 @@ export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: num
 						<ThemedText style={{ ...styles.clearText, marginLeft: 10 }}>
 							CLEAR
 						</ThemedText>
-						<ThemedText style={styles.linesText}>5</ThemedText>
+						<ThemedText style={styles.linesText}>{5 - rowCleared}</ThemedText>
 						<ThemedText style={{ ...styles.clearText, marginRight: 10 }}>
 							LINES
 						</ThemedText>
@@ -74,11 +77,12 @@ export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: num
 				}
 			/>
 			<HeaderBox
-				title={'SCORE'}
+				title={'NEXT'}
 				content={`${minutes.toString()}:${seconds.toString()}`}
 				style={{
 					borderWidth: 2,
 					borderColor: 'white',
+					transform: [{ translateY: 20 }],
 				}}
 			/>
 		</View>

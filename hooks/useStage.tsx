@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { PLAYER } from './usePlayer';
+import { useGame } from './useGame';
 
 export type STAGECELL = { value: number | string; isMerged: boolean };
 export type STAGE = STAGECELL[][];
@@ -13,18 +14,26 @@ export const useStage = (
 	isGameOver: boolean,
 ) => {
 	const [stage, setStage] = useState<STAGE>(createStage());
+	const { setIsRowCleared } = useGame();
+	const [rowsCleared, setRowsCleared] = useState(0);
 
 	const checkRows = (newStage: STAGE) => {
-		const updatedStage = newStage.forEach((row) => {
+		let numberOfRowCleared = 0;
+		newStage.forEach((row) => {
 			if (row.every((cell) => cell.isMerged)) {
 				const fulledRow = newStage.indexOf(row);
 				newStage.splice(fulledRow, 1);
+				numberOfRowCleared++;
 				newStage.unshift(Array(10).fill({ value: 0, isMerged: false }));
 			}
 			return row;
 		});
-		return updatedStage;
+		return numberOfRowCleared;
 	};
+
+	useEffect(() => {
+		setIsRowCleared(rowsCleared);
+	}, [rowsCleared]);
 
 	useEffect(() => {
 		if (!player?.pos) return;
@@ -50,14 +59,14 @@ export const useStage = (
 			});
 
 			if (player.collided) {
-				checkRows(newStage);
+				setRowsCleared((prev) => prev + checkRows(newStage));
 				if (!isGameOver) resetPlayer();
 			}
 			return newStage;
 		};
 
 		setStage((prevState) => updatedStage(prevState));
-	}, [player?.collided, player?.pos?.x, player?.pos?.y, player?.tetromino]);
+	}, [player?.collided, player?.pos?.x, player?.pos?.y, player?.tetromino, isGameOver]);
 
 	return { stage };
 };

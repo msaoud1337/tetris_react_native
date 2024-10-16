@@ -1,10 +1,11 @@
 import { useStage } from '@/hooks/useStage';
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import {
 	HandlerStateChangeEvent,
 	PanGestureHandler,
 	PanGestureHandlerEventPayload,
+	TapGestureHandler,
 } from 'react-native-gesture-handler';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useInterval } from '@/hooks/useInterval';
@@ -63,7 +64,7 @@ export const GameStage = () => {
 
 	return (
 		<PanGestureHandler onHandlerStateChange={onHandlerStateChange}>
-			<Pressable onPress={() => playerRotate(stage)} style={{ flex: 1 }}>
+			<TapGestureHandler numberOfTaps={2} onActivated={() => playerRotate(stage)}>
 				<View
 					style={[
 						{
@@ -100,7 +101,7 @@ export const GameStage = () => {
 						);
 					})}
 				</View>
-			</Pressable>
+			</TapGestureHandler>
 		</PanGestureHandler>
 	);
 };
