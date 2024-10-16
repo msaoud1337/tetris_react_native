@@ -1,7 +1,7 @@
-import { TETROMINOS } from '@/utils/setup';
 import { useCallback, useState } from 'react';
 import { STAGE } from './useStage';
 import { checkMove } from '@/utils/functions';
+import { TETROMINOS } from '@/constants/setup';
 
 export type PLAYER = {
 	pos: {
@@ -13,7 +13,18 @@ export type PLAYER = {
 };
 
 export const randomTetromino = () => {
-	const tetrominos = ['I', 'J', 'L', 'O', 'S', 'T', 'Z'] as (keyof typeof TETROMINOS)[];
+	const tetrominos = [
+		'I',
+		'J',
+		'L',
+		'O',
+		'S',
+		'T',
+		'Z',
+		'U',
+		'.',
+		'7',
+	] as (keyof typeof TETROMINOS)[];
 	const randTetromino = tetrominos[Math.floor(Math.random() * tetrominos.length)];
 	return TETROMINOS[randTetromino];
 };
