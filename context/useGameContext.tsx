@@ -28,7 +28,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case 'ISGAME_STARTED':
 			return { ...state, isGamePlayed: true };
 		case 'ISGAME_PAUSED':
-			return { ...state, isGamePaused: true };
+			return { ...state, isGamePaused: action.payload };
 		default:
 			return state;
 	}

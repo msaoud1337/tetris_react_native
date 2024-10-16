@@ -10,12 +10,14 @@ import { usePlayer } from '@/hooks/usePlayer';
 import { useInterval } from '@/hooks/useInterval';
 import { checkMove } from '@/utils/functions';
 import { TETROMINOS } from '@/constants/setup';
+import { useGame } from '@/hooks/useGame';
 
 export const GameStage = () => {
 	const [isGameOver, setIsGameOver] = useState<boolean>(false);
 	const [dropInterval, setDropInterval] = useState<null | number>(null);
 	const { player, resetPlayer, updatePlayerPos, playerRotate } = usePlayer();
 	const { stage } = useStage(player, resetPlayer, isGameOver);
+	const { isGamePaused } = useGame();
 
 	const onHandlerStateChange = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
 		if (e.nativeEvent.translationX > 30 && !checkMove(player!, stage, { dirX: 1, dirY: 0 }))
@@ -50,7 +52,7 @@ export const GameStage = () => {
 	};
 
 	useInterval(() => {
-		drop();
+		if (!isGamePaused) drop();
 	}, dropInterval);
 
 	useEffect(() => {

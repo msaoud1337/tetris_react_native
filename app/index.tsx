@@ -9,7 +9,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function HomeScreen() {
 	const [time, setTime] = useState({ minutes: 0, seconds: 0 });
-	const { isGamePlayed, startTheGame, setGameStats } = useGame();
+	const { isGamePlayed, startTheGame, setGameStats, isGamePaused } = useGame();
 
 	useEffect(() => {
 		if (!isGamePlayed) {
@@ -18,6 +18,7 @@ export default function HomeScreen() {
 		}
 		const timer =
 			isGamePlayed &&
+			!isGamePaused &&
 			setInterval(() => {
 				setTime((prevTime) => {
 					const newSeconds = prevTime.seconds + 1;
@@ -29,8 +30,8 @@ export default function HomeScreen() {
 				});
 			}, 1000);
 
-		return () => clearInterval(timer);
-	}, [isGamePlayed]);
+		return () => clearInterval(Number(timer));
+	}, [isGamePlayed, isGamePaused]);
 
 	return (
 		<SafeAreaView style={{ flex: 1 }}>
@@ -40,7 +41,7 @@ export default function HomeScreen() {
 			</View>
 			<GestureHandlerRootView>
 				<Pressable
-					onPress={() => setGameStats(true)}
+					onPress={() => setGameStats(!isGamePaused)}
 					style={{
 						backgroundColor: '#252c93',
 						width: 70,
