@@ -1,5 +1,4 @@
 import { useStage } from '@/hooks/useStage';
-import { TETROMINOS } from '@/utils/setup';
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import {
@@ -10,11 +9,13 @@ import {
 import { usePlayer } from '@/hooks/usePlayer';
 import { useInterval } from '@/hooks/useInterval';
 import { checkMove } from '@/utils/functions';
+import { TETROMINOS } from '@/constants/setup';
 
 export const GameStage = () => {
+	const [isGameOver, setIsGameOver] = useState<boolean>(false);
 	const [dropInterval, setDropInterval] = useState<null | number>(null);
 	const { player, resetPlayer, updatePlayerPos, playerRotate } = usePlayer();
-	const { stage } = useStage(player, resetPlayer);
+	const { stage } = useStage(player, resetPlayer, isGameOver);
 
 	const onHandlerStateChange = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
 		if (e.nativeEvent.translationX > 30 && !checkMove(player!, stage, { dirX: 1, dirY: 0 }))
@@ -43,6 +44,7 @@ export const GameStage = () => {
 		if (!checkMove(player!, stage, { dirX: 0, dirY: 1 })) {
 			updatePlayerPos({ x: 0, y: 1 });
 		} else {
+			if (!player?.pos.y) setIsGameOver(true);
 			updatePlayerPos({ x: 0, y: 0, collided: true });
 		}
 	};
@@ -75,7 +77,7 @@ export const GameStage = () => {
 						<View key={`row-${y}`} style={[styles.container, { flex: 1 }]}>
 							{row.map((cell, x) => (
 								<View
-									key={`y${y}-x${x}-v${cell.value}}`}
+									key={`${y}${x}-v${cell.value}`}
 									style={[
 										styles.square,
 										{

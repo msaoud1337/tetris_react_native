@@ -7,7 +7,11 @@ export type STAGE = STAGECELL[][];
 export const createStage = () =>
 	Array.from(Array(20), () => Array(10).fill({ value: 0, isMerged: false }));
 
-export const useStage = (player: PLAYER | undefined, resetPlayer: () => void) => {
+export const useStage = (
+	player: PLAYER | undefined,
+	resetPlayer: () => void,
+	isGameOver: boolean,
+) => {
 	const [stage, setStage] = useState<STAGE>(createStage());
 
 	const checkRows = (newStage: STAGE) => {
@@ -47,7 +51,7 @@ export const useStage = (player: PLAYER | undefined, resetPlayer: () => void) =>
 
 			if (player.collided) {
 				checkRows(newStage);
-				resetPlayer();
+				if (!isGameOver) resetPlayer();
 			}
 			return newStage;
 		};
