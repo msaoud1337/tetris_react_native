@@ -1,7 +1,6 @@
 import { useCallback, useState } from 'react';
 import { STAGE } from './useStage';
-import { checkMove } from '@/utils/functions';
-import { TETROMINOS } from '@/constants/setup';
+import { checkMove, randomTetromino } from '@/utils/functions';
 
 export type PLAYER = {
 	pos: {
@@ -10,23 +9,6 @@ export type PLAYER = {
 	};
 	tetromino: (string | number)[][];
 	collided: boolean;
-};
-
-export const randomTetromino = () => {
-	const tetrominos = [
-		'I',
-		'J',
-		'L',
-		'O',
-		'S',
-		'T',
-		'Z',
-		'U',
-		'.',
-		'7',
-	] as (keyof typeof TETROMINOS)[];
-	const randTetromino = tetrominos[Math.floor(Math.random() * tetrominos.length)];
-	return TETROMINOS[randTetromino];
 };
 
 export const usePlayer = () => {

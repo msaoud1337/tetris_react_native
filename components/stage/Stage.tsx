@@ -9,27 +9,9 @@ import {
 } from 'react-native-gesture-handler';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useInterval } from '@/hooks/useInterval';
-import { checkMove } from '@/utils/functions';
+import { checkMove, darkenColor } from '@/utils/functions';
 import { TETROMINOS } from '@/constants/setup';
 import { useGame } from '@/hooks/useGame';
-
-const darkenColor = (hex: string, percentage: number): string => {
-	// Convert hex to RGB
-	const rgb = hex
-		.replace(/^#/, '')
-		.match(/.{2}/g)!
-		.map((x) => parseInt(x, 16));
-
-	// Reduce each RGB channel by the given percentage
-	const darkenedRgb = rgb.map((channel) =>
-		Math.max(0, Math.min(255, Math.floor(channel * (1 - percentage)))),
-	);
-
-	// Convert the RGB values back to hex
-	const darkenedHex = darkenedRgb.map((x) => x.toString(16).padStart(2, '0')).join('');
-
-	return `#${darkenedHex}`;
-};
 
 export const GameStage = () => {
 	const { isGamePaused, isGameOver, setGameIsOver } = useGame();
