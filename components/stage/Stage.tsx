@@ -13,6 +13,24 @@ import { checkMove } from '@/utils/functions';
 import { TETROMINOS } from '@/constants/setup';
 import { useGame } from '@/hooks/useGame';
 
+const darkenColor = (hex: string, percentage: number): string => {
+	// Convert hex to RGB
+	const rgb = hex
+		.replace(/^#/, '')
+		.match(/.{2}/g)!
+		.map((x) => parseInt(x, 16));
+
+	// Reduce each RGB channel by the given percentage
+	const darkenedRgb = rgb.map((channel) =>
+		Math.max(0, Math.min(255, Math.floor(channel * (1 - percentage)))),
+	);
+
+	// Convert the RGB values back to hex
+	const darkenedHex = darkenedRgb.map((x) => x.toString(16).padStart(2, '0')).join('');
+
+	return `#${darkenedHex}`;
+};
+
 export const GameStage = () => {
 	const { isGamePaused, isGameOver, setGameIsOver } = useGame();
 
@@ -75,23 +93,36 @@ export const GameStage = () => {
 					{stage?.map((row, y) => {
 						return (
 							<View key={`row-${y}`} style={[styles.container, { flex: 1 }]}>
-								{row.map((cell, x) => (
-									<View
-										key={`${y}${x}-v${cell.value}`}
-										style={[
-											styles.square,
-											{
-												flex: 1,
-												borderWidth: !cell.isMerged ? 0.3 : 0,
-												backgroundColor: !cell.isMerged
-													? TETROMINOS[
-															cell.value as keyof typeof TETROMINOS
-														]?.color
-													: 'red',
-											},
-										]}
-									/>
-								))}
+								{row.map((cell, x) => {
+									const color =
+										TETROMINOS[cell.value as keyof typeof TETROMINOS]?.color;
+									return (
+										<View
+											key={`${y}${x}-v${cell.value}`}
+											style={[
+												styles.square,
+												{
+													flex: 1,
+													borderWidth: 0.3,
+													backgroundColor: color,
+													justifyContent: 'center',
+													alignItems: 'center',
+												},
+											]}
+										>
+											{color !== '0, 0, 0' && (
+												<View
+													style={{
+														height: '75%',
+														width: '75%',
+														borderWidth: 5,
+														borderColor: darkenColor(color, 0.1),
+													}}
+												/>
+											)}
+										</View>
+									);
+								})}
 							</View>
 						);
 					})}

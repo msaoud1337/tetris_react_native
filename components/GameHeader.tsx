@@ -66,12 +66,10 @@ export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: num
 				title={'TARGET'}
 				content={
 					<View style={styles.container}>
-						<ThemedText style={{ ...styles.clearText, marginLeft: 10 }}>
-							CLEAR
-						</ThemedText>
-						<ThemedText style={styles.linesText}>{5 - rowCleared}</ThemedText>
+						<ThemedText style={{ ...styles.clearText, marginLeft: 10 }}>ROW</ThemedText>
+						<ThemedText style={styles.linesText}>{rowCleared}</ThemedText>
 						<ThemedText style={{ ...styles.clearText, marginRight: 10 }}>
-							LINES
+							CLEARED
 						</ThemedText>
 					</View>
 				}

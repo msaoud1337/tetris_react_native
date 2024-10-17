@@ -30,7 +30,7 @@ type GameContextType = {
 	startTheGame: () => void;
 	setGameStats: (payload: boolean) => void;
 	setGameIsOver: (payload: boolean) => void;
-	setIsRowCleared: (paylaod?: number) => void;
+	setIsRowCleared: (payload: number) => void;
 };
 
 export const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -63,8 +63,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
 
 	const setGameIsOver = (payload: boolean) => dispatch({ type: 'ISGAME_OVER', payload });
 
-	const setIsRowCleared = (paylaod?: number) =>
-		dispatch({ type: 'ISROW_CLEARED', payload: paylaod ? paylaod : 1 });
+	const setIsRowCleared = (payload: number) => dispatch({ type: 'ISROW_CLEARED', payload });
 
 	return (
 		<GameContext.Provider
