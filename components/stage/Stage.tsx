@@ -29,19 +29,11 @@ export const GameStage = () => {
 			!checkMove(player!, stage, { dirX: -1, dirY: 0 })
 		)
 			updatePlayerPos({ x: -1, y: 0 });
-		else if (
-			e.nativeEvent.translationY > 20 &&
-			e.nativeEvent.translationY < 500 &&
-			!checkMove(player!, stage, { dirX: 0, dirY: 2 })
-		)
-			updatePlayerPos({ x: 0, y: 2 });
-		else if (
-			e.nativeEvent.translationY > 20 &&
-			e.nativeEvent.translationY < 200 &&
-			!checkMove(player!, stage, { dirX: 0, dirY: 1 })
-		)
-			updatePlayerPos({ x: 0, y: 1 });
-		else if (e.nativeEvent.translationY < -100) playerRotate(stage);
+		else if (e.nativeEvent.translationY > 20) {
+			let lenght = 0;
+			while (!checkMove(player!, stage, { dirX: 0, dirY: lenght })) lenght++;
+			updatePlayerPos({ x: 0, y: lenght - 1 });
+		}
 	};
 
 	const drop = () => {
@@ -63,8 +55,11 @@ export const GameStage = () => {
 	}, []);
 
 	return (
-		<PanGestureHandler onHandlerStateChange={onHandlerStateChange}>
-			<TapGestureHandler numberOfTaps={2} onActivated={() => playerRotate(stage)}>
+		<PanGestureHandler onHandlerStateChange={(e) => !isGamePaused && onHandlerStateChange(e)}>
+			<TapGestureHandler
+				numberOfTaps={2}
+				onActivated={() => !isGamePaused && playerRotate(stage)}
+			>
 				<View
 					style={[
 						{
