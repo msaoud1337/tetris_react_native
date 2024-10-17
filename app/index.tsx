@@ -2,7 +2,7 @@ import { GameBackground } from '@/components/GameBackground';
 import { GameHeader } from '@/components/GameHeader';
 import { GameStage } from '@/components/stage/Stage';
 import { useGame } from '@/hooks/useGame';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, SafeAreaView, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -56,8 +56,8 @@ export default function HomeScreen() {
 							backgroundColor: '#252c93',
 							width: 70,
 							alignItems: 'flex-end',
-							paddingRight: 3,
-							height: 45,
+							padding: 3,
+							// height: 45,
 							justifyContent: 'center',
 							zIndex: 20,
 							position: 'absolute',
@@ -65,7 +65,11 @@ export default function HomeScreen() {
 						}}
 					>
 						<Pressable onPress={() => setGameStats(!isGamePaused)}>
-							<MaterialIcons name='pause-presentation' size={45} color='white' />
+							{isGamePaused ? (
+								<Feather name='play-circle' size={40} color='white' />
+							) : (
+								<Feather name='pause-circle' size={40} color='white' />
+							)}
 						</Pressable>
 					</Animated.View>
 				)}
