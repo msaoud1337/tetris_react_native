@@ -1,12 +1,19 @@
 /* eslint-disable no-unused-vars */
 
+import { randomTetromino } from '@/utils/functions';
 import { createContext, useReducer, ReactNode } from 'react';
+
+type TetrosType = {
+	shape: number[][] | string[][] | (string | number)[][];
+	color: string;
+};
 
 type GameState = {
 	isGamePlayed: boolean;
 	isGamePaused: boolean;
 	isGameOver: boolean;
 	rowCleared: number;
+	tetrosList: TetrosType[];
 };
 
 type GameAction =
@@ -20,6 +27,13 @@ const initialState: GameState = {
 	isGamePaused: false,
 	isGameOver: false,
 	rowCleared: 0,
+	tetrosList: Array.from({ length: 2 }).map(() => {
+		const tetros = randomTetromino();
+		return {
+			shape: tetros.shape,
+			color: tetros.color,
+		};
+	}),
 };
 
 type GameContextType = {
@@ -27,6 +41,7 @@ type GameContextType = {
 	isGamePaused: boolean;
 	isGameOver: boolean;
 	rowCleared: number;
+	tetrosList: TetrosType[];
 	startTheGame: () => void;
 	setGameStats: (payload: boolean) => void;
 	setGameIsOver: (payload: boolean) => void;
@@ -44,7 +59,7 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 		case 'ISGAME_OVER':
 			return { ...state, isGameOver: action.payload };
 		case 'ISROW_CLEARED':
-			return { ...state, rowCleared: state.rowCleared + action.payload };
+			return { ...state, rowCleared: action.payload };
 		default:
 			return state;
 	}

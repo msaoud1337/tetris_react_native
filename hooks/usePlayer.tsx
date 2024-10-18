@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { STAGE } from './useStage';
-import { checkMove, randomTetromino } from '@/utils/functions';
+import { checkMove } from '@/utils/functions';
+import { useGame } from './useGame';
 
 export type PLAYER = {
 	pos: {
@@ -13,7 +14,7 @@ export type PLAYER = {
 
 export const usePlayer = () => {
 	const [player, setPlayer] = useState<PLAYER | undefined>(undefined);
-
+	const { tetrosList } = useGame();
 	const updatePlayerPos = ({
 		x,
 		y,
@@ -59,13 +60,12 @@ export const usePlayer = () => {
 		setPlayer(clonedPlayer);
 	};
 
-	const resetPlayer = useCallback(() => {
+	const resetPlayer = () =>
 		setPlayer({
 			pos: { x: 10 / 2 - 2, y: 0 },
-			tetromino: randomTetromino().shape,
+			tetromino: tetrosList[0].shape,
 			collided: false,
 		});
-	}, []);
 
 	return { player, setPlayer, resetPlayer, updatePlayerPos, playerRotate };
 };

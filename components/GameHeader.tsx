@@ -4,11 +4,11 @@ import { useGame } from '@/hooks/useGame';
 
 const HeaderBox = ({
 	title,
-	content,
+	Content,
 	style,
 }: {
 	title: string;
-	content: JSX.Element | string;
+	Content: string | (() => JSX.Element);
 	style?: StyleProp<ViewStyle>;
 }) => {
 	return (
@@ -23,7 +23,7 @@ const HeaderBox = ({
 			>
 				{title}
 			</ThemedText>
-			{typeof content === 'string' ? (
+			{typeof Content === 'string' ? (
 				<ThemedText
 					style={{
 						fontSize: 16,
@@ -33,17 +33,19 @@ const HeaderBox = ({
 						padding: 5,
 					}}
 				>
-					{content}
+					{Content}
 				</ThemedText>
 			) : (
-				content
+				<Content />
 			)}
 		</View>
 	);
 };
 
 export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: number }) => {
-	const { rowCleared } = useGame();
+	const { rowCleared, tetrosList } = useGame();
+	const nextTetros = tetrosList[1];
+
 	return (
 		<View
 			style={{
@@ -61,10 +63,10 @@ export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: num
 				transform: [{ skewY: '-3deg' }],
 			}}
 		>
-			<HeaderBox title={'TIME'} content={`${minutes.toString()}:${seconds.toString()}`} />
+			<HeaderBox title={'TIME'} Content={`${minutes.toString()}:${seconds.toString()}`} />
 			<HeaderBox
 				title={'TARGET'}
-				content={
+				Content={() => (
 					<View style={styles.container}>
 						<ThemedText style={{ ...styles.clearText, marginLeft: 10 }}>ROW</ThemedText>
 						<ThemedText style={styles.linesText}>{rowCleared}</ThemedText>
@@ -72,15 +74,44 @@ export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: num
 							CLEARED
 						</ThemedText>
 					</View>
-				}
+				)}
 			/>
 			<HeaderBox
 				title={'NEXT'}
-				content={`${minutes.toString()}:${seconds.toString()}`}
 				style={{
 					borderWidth: 2,
 					borderColor: 'white',
 					transform: [{ translateY: 20 }],
+					// padding: 20
+				}}
+				Content={() => {
+					return (
+						<>
+							{nextTetros.shape.map((row, y) => (
+								<View
+									key={y}
+									style={{
+										flex: 1,
+										borderColor: 'red',
+										borderWidth: 1,
+										flexDirection: 'row',
+									}}
+								>
+									{row.map((cell, x) => (
+										<View
+											key={x}
+											style={{
+												flex: 1,
+												backgroundColor:
+													cell !== 0 ? nextTetros.color : 'transparent',
+												borderWidth: 1,
+											}}
+										/>
+									))}
+								</View>
+							))}
+						</>
+					);
 				}}
 			/>
 		</View>
