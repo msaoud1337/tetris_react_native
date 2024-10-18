@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { PLAYER } from './usePlayer';
 import { useGame } from './useGame';
+import { randomTetromino } from '@/utils/functions';
+import { TetrosType } from '@/context/useGameContext';
 
 export type STAGECELL = { value: number | string; isMerged: boolean };
 export type STAGE = STAGECELL[][];
@@ -10,11 +12,11 @@ export const createStage = () =>
 
 export const useStage = (
 	player: PLAYER | undefined,
-	resetPlayer: () => void,
+	resetPlayer: (tetros: TetrosType) => void,
 	isGameOver: boolean,
 ) => {
 	const [stage, setStage] = useState<STAGE>(createStage());
-	const { setIsRowCleared } = useGame();
+	const { setIsRowCleared, updateTetrosArray, tetrosList } = useGame();
 	const [rowsCleared, setRowsCleared] = useState(0);
 
 	const checkRows = (newStage: STAGE) => {
@@ -60,7 +62,14 @@ export const useStage = (
 
 			if (player.collided) {
 				setRowsCleared((prev) => prev + checkRows(newStage));
-				if (!isGameOver) resetPlayer();
+				if (!isGameOver) {
+					const newTetros = randomTetromino();
+					const newArray = [...tetrosList];
+					newArray.push(newTetros);
+					newArray.shift();
+					updateTetrosArray(newArray);
+					resetPlayer(newArray[0]);
+				}
 			}
 			return newStage;
 		};

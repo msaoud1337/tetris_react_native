@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { STAGE } from './useStage';
 import { checkMove } from '@/utils/functions';
 import { useGame } from './useGame';
+import { TetrosType } from '@/context/useGameContext';
 
 export type PLAYER = {
 	pos: {
@@ -60,10 +61,10 @@ export const usePlayer = () => {
 		setPlayer(clonedPlayer);
 	};
 
-	const resetPlayer = () =>
+	const resetPlayer = (tetros?: TetrosType) =>
 		setPlayer({
 			pos: { x: 10 / 2 - 2, y: 0 },
-			tetromino: tetrosList[0].shape,
+			tetromino: tetros ? tetros.shape : tetrosList[0].shape,
 			collided: false,
 		});
 

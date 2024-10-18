@@ -3,7 +3,7 @@
 import { randomTetromino } from '@/utils/functions';
 import { createContext, useReducer, ReactNode } from 'react';
 
-type TetrosType = {
+export type TetrosType = {
 	shape: number[][] | string[][] | (string | number)[][];
 	color: string;
 };
@@ -20,7 +20,8 @@ type GameAction =
 	| { type: 'ISGAME_STARTED' }
 	| { type: 'ISGAME_PAUSED'; payload: boolean }
 	| { type: 'ISGAME_OVER'; payload: boolean }
-	| { type: 'ISROW_CLEARED'; payload: number };
+	| { type: 'ISROW_CLEARED'; payload: number }
+	| { type: 'UPDATE_TETROSARRAY'; payload: TetrosType[] };
 
 const initialState: GameState = {
 	isGamePlayed: false,
@@ -43,6 +44,7 @@ type GameContextType = {
 	rowCleared: number;
 	tetrosList: TetrosType[];
 	startTheGame: () => void;
+	updateTetrosArray: (payload: TetrosType[]) => void;
 	setGameStats: (payload: boolean) => void;
 	setGameIsOver: (payload: boolean) => void;
 	setIsRowCleared: (payload: number) => void;
@@ -60,6 +62,8 @@ function gameReducer(state: GameState, action: GameAction): GameState {
 			return { ...state, isGameOver: action.payload };
 		case 'ISROW_CLEARED':
 			return { ...state, rowCleared: action.payload };
+		case 'UPDATE_TETROSARRAY':
+			return { ...state, tetrosList: action.payload };
 		default:
 			return state;
 	}
@@ -80,6 +84,9 @@ export const GameProvider = ({ children }: GameProviderProps) => {
 
 	const setIsRowCleared = (payload: number) => dispatch({ type: 'ISROW_CLEARED', payload });
 
+	const updateTetrosArray = (payload: TetrosType[]) =>
+		dispatch({ type: 'UPDATE_TETROSARRAY', payload });
+
 	return (
 		<GameContext.Provider
 			value={{
@@ -88,6 +95,7 @@ export const GameProvider = ({ children }: GameProviderProps) => {
 				setGameStats,
 				setGameIsOver,
 				setIsRowCleared,
+				updateTetrosArray,
 			}}
 		>
 			{children}
