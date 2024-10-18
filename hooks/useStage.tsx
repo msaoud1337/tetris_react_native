@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { PLAYER } from './usePlayer';
 import { useGame } from './useGame';
-import { randomTetromino } from '@/utils/functions';
-import { TetrosType } from '@/context/useGameContext';
 
 export type STAGECELL = { value: number | string; isMerged: boolean };
 export type STAGE = STAGECELL[][];
@@ -12,11 +10,11 @@ export const createStage = () =>
 
 export const useStage = (
 	player: PLAYER | undefined,
-	resetPlayer: (tetros: TetrosType) => void,
+	resetPlayer: () => void,
 	isGameOver: boolean,
 ) => {
 	const [stage, setStage] = useState<STAGE>(createStage());
-	const { setIsRowCleared, updateTetrosArray, tetrosList } = useGame();
+	const { setIsRowCleared, tetrosList } = useGame();
 	const [rowsCleared, setRowsCleared] = useState(0);
 
 	const checkRows = (newStage: STAGE) => {
@@ -63,19 +61,21 @@ export const useStage = (
 			if (player.collided) {
 				setRowsCleared((prev) => prev + checkRows(newStage));
 				if (!isGameOver) {
-					const newTetros = randomTetromino();
-					const newArray = [...tetrosList];
-					newArray.push(newTetros);
-					newArray.shift();
-					updateTetrosArray(newArray);
-					resetPlayer(newArray[0]);
+					resetPlayer();
 				}
 			}
 			return newStage;
 		};
 
 		setStage((prevState) => updatedStage(prevState));
-	}, [player?.collided, player?.pos?.x, player?.pos?.y, player?.tetromino, isGameOver]);
+	}, [
+		player?.collided,
+		player?.pos?.x,
+		player?.pos?.y,
+		player?.tetromino,
+		isGameOver,
+		tetrosList,
+	]);
 
 	return { stage };
 };

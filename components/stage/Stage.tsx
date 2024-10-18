@@ -9,16 +9,16 @@ import {
 } from 'react-native-gesture-handler';
 import { usePlayer } from '@/hooks/usePlayer';
 import { useInterval } from '@/hooks/useInterval';
-import { checkMove, darkenColor } from '@/utils/functions';
+import { checkMove, darkenColor, randomTetromino } from '@/utils/functions';
 import { TETROMINOS } from '@/constants/setup';
 import { useGame } from '@/hooks/useGame';
 
 export const GameStage = () => {
-	const { isGamePaused, isGameOver, setGameIsOver } = useGame();
+	const { isGamePaused, isGameOver, setGameIsOver, tetrosList, updateTetrosArray } = useGame();
 
 	const [dropInterval, setDropInterval] = useState<null | number>(null);
-	const { player, resetPlayer, updatePlayerPos, playerRotate } = usePlayer();
 
+	const { player, resetPlayer, updatePlayerPos, playerRotate } = usePlayer();
 	const { stage } = useStage(player, resetPlayer, isGameOver);
 
 	const onHandlerStateChange = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
@@ -41,6 +41,10 @@ export const GameStage = () => {
 			updatePlayerPos({ x: 0, y: 1 });
 		} else {
 			if (!player?.pos.y) setGameIsOver(true);
+			const newTetros = randomTetromino();
+			tetrosList.push(newTetros);
+			tetrosList.shift();
+			updateTetrosArray(tetrosList);
 			updatePlayerPos({ x: 0, y: 0, collided: true });
 		}
 	};
