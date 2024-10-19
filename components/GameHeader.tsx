@@ -12,7 +12,7 @@ const HeaderBox = ({
 	style?: StyleProp<ViewStyle>;
 }) => {
 	return (
-		<View style={[{ backgroundColor: '#161a58', marginBottom: 10, padding: 2 }, style]}>
+		<View style={[{ backgroundColor: '#161a58', padding: 2 }, style]}>
 			<ThemedText
 				style={{
 					textAlign: 'center',
@@ -42,9 +42,11 @@ const HeaderBox = ({
 	);
 };
 
+export const nextTetrosStage = () => Array.from(Array(3), () => Array(3).fill(true));
+
 export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: number }) => {
 	const { rowCleared, tetrosList } = useGame();
-	const nextTetros = tetrosList[1];
+	const nextTetris = tetrosList[1];
 
 	return (
 		<View
@@ -59,6 +61,7 @@ export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: num
 				flexDirection: 'row',
 				justifyContent: 'center',
 				alignItems: 'flex-end',
+				paddingBottom: 5,
 				gap: 10,
 				transform: [{ skewY: '-3deg' }],
 			}}
@@ -76,44 +79,57 @@ export const GameHeader = ({ minutes, seconds }: { minutes: number; seconds: num
 					</View>
 				)}
 			/>
-			<HeaderBox
-				title={'NEXT'}
+			<View
 				style={{
-					borderWidth: 2,
-					borderColor: 'white',
-					transform: [{ translateY: 20 }],
-					// padding: 20
+					padding: 6,
+					backgroundColor: '#252c93',
+					transform: [{ translateY: 30 }],
+					marginLeft: -5,
 				}}
-				Content={() => {
-					return (
-						<>
-							{nextTetros.shape.map((row, y) => (
-								<View
-									key={y}
-									style={{
-										flex: 1,
-										borderColor: 'red',
-										borderWidth: 1,
-										flexDirection: 'row',
-									}}
-								>
-									{row.map((cell, x) => (
-										<View
-											key={x}
-											style={{
-												flex: 1,
-												backgroundColor:
-													cell !== 0 ? nextTetros.color : 'transparent',
-												borderWidth: 1,
-											}}
-										/>
-									))}
-								</View>
-							))}
-						</>
-					);
-				}}
-			/>
+			>
+				<HeaderBox
+					title={'NEXT'}
+					style={{
+						borderWidth: 1,
+						borderColor: 'white',
+					}}
+					Content={() => {
+						return (
+							<>
+								{nextTetrosStage().map((row, y) => (
+									<View
+										key={y}
+										style={{
+											height: 15,
+											flexDirection: 'row',
+											gap: 0,
+										}}
+									>
+										{row.map((_, x) => (
+											<View
+												key={x}
+												style={{
+													flex: 1,
+													backgroundColor:
+														nextTetris.shape[y] &&
+														nextTetris.shape[y][x]
+															? nextTetris.color
+															: '#1f257e',
+													borderWidth:
+														nextTetris.shape[y] &&
+														nextTetris.shape[y][x]
+															? 0.3
+															: 0,
+												}}
+											/>
+										))}
+									</View>
+								))}
+							</>
+						);
+					}}
+				/>
+			</View>
 		</View>
 	);
 };
