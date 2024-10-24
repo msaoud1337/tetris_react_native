@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { PLAYER } from './usePlayer';
 import { useGame } from './useGame';
+import { checkMove } from '@/utils/functions';
 
-export type STAGECELL = { value: number | string; isMerged: boolean };
+export type STAGECELL = { value: number | string; isMerged: boolean | 'shadow'; isShadow?: true };
 export type STAGE = STAGECELL[][];
 
 export const createStage = () =>
@@ -37,6 +38,10 @@ export const useStage = (
 
 	useEffect(() => {
 		if (!player?.pos) return;
+
+		let lenght = 0;
+		while (!checkMove(player!, stage, { dirX: 0, dirY: lenght })) lenght++;
+
 		const updatedStage = (prevStage: STAGE) => {
 			const newStage = prevStage.map((line) =>
 				line.map((cell) => (!cell.isMerged ? { value: 0, isMerged: false } : cell)),
@@ -52,6 +57,16 @@ export const useStage = (
 							newStage[y + player?.pos.y][x + player?.pos.x] = {
 								value: cell,
 								isMerged: player?.collided ? true : false,
+							};
+						}
+						if (
+							newStage[y + player?.pos.y] &&
+							newStage[y + player?.pos.y + (lenght - 1)][x + player?.pos.x]
+						) {
+							newStage[y + player?.pos.y + (lenght - 1)][x + player?.pos.x] = {
+								value: cell,
+								isMerged: player?.collided ? true : false,
+								isShadow: player?.collided ? undefined : true,
 							};
 						}
 					}

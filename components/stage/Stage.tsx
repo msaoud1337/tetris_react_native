@@ -15,13 +15,11 @@ import { useGame } from '@/hooks/useGame';
 
 export const GameStage = () => {
 	const { isGamePaused, isGameOver, setGameIsOver, tetrosList, updateTetrosArray } = useGame();
-
 	const [dropInterval, setDropInterval] = useState<null | number>(null);
-
 	const { player, resetPlayer, updatePlayerPos, playerRotate } = usePlayer();
 	const { stage } = useStage(player, resetPlayer, isGameOver);
 
-	const onHandlerStateChange = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
+	const onSlidePlayer = (e: HandlerStateChangeEvent<PanGestureHandlerEventPayload>) => {
 		if (e.nativeEvent.translationX > 30 && !checkMove(player!, stage, { dirX: 1, dirY: 0 }))
 			updatePlayerPos({ x: 1, y: 0 });
 		else if (
@@ -59,7 +57,7 @@ export const GameStage = () => {
 	}, []);
 
 	return (
-		<PanGestureHandler onHandlerStateChange={(e) => !isGamePaused && onHandlerStateChange(e)}>
+		<PanGestureHandler onHandlerStateChange={(e) => !isGamePaused && onSlidePlayer(e)}>
 			<TapGestureHandler
 				numberOfTaps={2}
 				onActivated={() => !isGamePaused && playerRotate(stage)}
@@ -93,6 +91,7 @@ export const GameStage = () => {
 													backgroundColor: color,
 													justifyContent: 'center',
 													alignItems: 'center',
+													opacity: cell.isShadow ? 0.6 : 1,
 												},
 											]}
 										>

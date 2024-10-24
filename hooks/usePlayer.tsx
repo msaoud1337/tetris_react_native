@@ -9,7 +9,7 @@ export type PLAYER = {
 		y: number;
 	};
 	tetromino: (string | number)[][];
-	collided: boolean;
+	collided: boolean | 'shadow';
 };
 
 export const usePlayer = () => {
