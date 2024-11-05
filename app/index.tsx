@@ -4,7 +4,15 @@ import { GameStage } from '@/components/stage/Stage';
 import { useGame } from '@/hooks/useGame';
 import { Feather } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import { Animated, Button, Dimensions, Pressable, SafeAreaView, View } from 'react-native';
+import {
+	Animated,
+	Dimensions,
+	Pressable,
+	SafeAreaView,
+	StyleSheet,
+	Text,
+	View,
+} from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const windowHeight = Dimensions.get('window').height;
@@ -18,6 +26,8 @@ const GamePauseStats = ({
 	isGameOver: boolean;
 	setGameStats: () => void;
 }) => {
+	if (isGameOver) return;
+
 	const translateX = useRef(new Animated.Value(-90)).current;
 
 	Animated.timing(translateX, {
@@ -27,7 +37,6 @@ const GamePauseStats = ({
 		delay: 200,
 	}).start();
 
-	if (isGameOver) return;
 	return (
 		<Animated.View
 			style={{
@@ -60,7 +69,7 @@ export default function HomeScreen() {
 
 	if (isGamePaused)
 		Animated.timing(translateY, {
-			toValue: (windowHeight / 100) * 35,
+			toValue: (windowHeight / 100) * 40,
 			duration: 500,
 			useNativeDriver: true,
 			delay: 200,
@@ -91,31 +100,24 @@ export default function HomeScreen() {
 	}, [isGamePlayed, isGamePaused, isGameOver]);
 
 	const GameStatsBox = isGamePaused && (
-		<View
-			style={{
-				height: '100%',
-				width: '100%',
-				position: 'absolute',
-				zIndex: 1337,
-				top: 0,
-				left: 0,
-				backgroundColor: 'rgba(0, 0, 0, .5)',
-			}}
-		>
+		<View style={styles.gameBoxModalWrapper}>
 			<Animated.View
 				style={{
 					transform: [{ translateY }],
 					width: '100%',
-					height: '30%',
+					height: '20%',
 					position: 'absolute',
 					backgroundColor: '#252c93',
 					top: 0,
 					left: 0,
 					zIndex: 1337,
+					justifyContent: 'center',
+					alignItems: 'center',
+					gap: 5,
 				}}
 			>
-				<Button
-					title='Press me'
+				<Pressable
+					style={styles.button}
 					onPress={() => {
 						Animated.timing(translateY, {
 							toValue: windowHeight,
@@ -124,15 +126,30 @@ export default function HomeScreen() {
 							delay: 200,
 						}).start(() => setGameStats(false));
 					}}
-				/>
+				>
+					<Text style={styles.text}>Continue</Text>
+				</Pressable>
+				<Pressable
+					style={styles.button}
+					onPress={() => {
+						Animated.timing(translateY, {
+							toValue: windowHeight,
+							duration: 500,
+							useNativeDriver: true,
+							delay: 200,
+						}).start(() => setGameStats(false));
+					}}
+				>
+					<Text style={styles.text}>Quit Game</Text>
+				</Pressable>
 			</Animated.View>
 		</View>
 	);
 
 	return (
 		<View style={{ flex: 1 }}>
+			{GameStatsBox}
 			<SafeAreaView style={{ flex: 1, position: 'relative' }}>
-				{GameStatsBox}
 				<View style={{ flex: 1, position: 'absolute' }}>
 					<GameHeader minutes={time.minutes} seconds={time.seconds} />
 					<GameBackground />
@@ -149,3 +166,32 @@ export default function HomeScreen() {
 		</View>
 	);
 }
+
+const styles = StyleSheet.create({
+	button: {
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingVertical: 12,
+		paddingHorizontal: 32,
+		borderRadius: 4,
+		elevation: 3,
+		backgroundColor: 'black',
+		width: '80%',
+	},
+	text: {
+		fontSize: 16,
+		lineHeight: 21,
+		fontWeight: 'bold',
+		letterSpacing: 0.25,
+		color: 'white',
+	},
+	gameBoxModalWrapper: {
+		height: '100%',
+		width: '100%',
+		position: 'absolute',
+		zIndex: 1337,
+		top: 0,
+		left: 0,
+		backgroundColor: 'rgba(0, 0, 0, .5)',
+	},
+});
