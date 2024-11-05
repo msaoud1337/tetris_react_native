@@ -1,19 +1,13 @@
 import { GameBackground } from '@/components/GameBackground';
 import { GameHeader } from '@/components/GameHeader';
 import { GameStage } from '@/components/stage/Stage';
+import { ThemedText } from '@/components/ThemedText';
 import { useGame } from '@/hooks/useGame';
 import { Feather } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
-import {
-	Animated,
-	Dimensions,
-	Pressable,
-	SafeAreaView,
-	StyleSheet,
-	Text,
-	View,
-} from 'react-native';
+import { Animated, Dimensions, Pressable, SafeAreaView, StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const windowHeight = Dimensions.get('window').height;
 
@@ -113,35 +107,68 @@ export default function HomeScreen() {
 					zIndex: 1337,
 					justifyContent: 'center',
 					alignItems: 'center',
-					gap: 5,
+					gap: 10,
 				}}
 			>
-				<Pressable
-					style={styles.button}
-					onPress={() => {
-						Animated.timing(translateY, {
-							toValue: windowHeight,
-							duration: 500,
-							useNativeDriver: true,
-							delay: 200,
-						}).start(() => setGameStats(false));
+				<View
+					style={{
+						width: '80%',
+						shadowColor: 'black',
+						shadowOffset: { width: 5, height: 5 },
+						shadowOpacity: 1,
+						shadowRadius: 1,
 					}}
 				>
-					<Text style={styles.text}>Continue</Text>
-				</Pressable>
-				<Pressable
-					style={styles.button}
-					onPress={() => {
-						Animated.timing(translateY, {
-							toValue: windowHeight,
-							duration: 500,
-							useNativeDriver: true,
-							delay: 200,
-						}).start(() => setGameStats(false));
+					<LinearGradient
+						colors={['#439648', '#89e46d']}
+						style={{
+							width: '100%',
+							shadowColor: 'black',
+							shadowOffset: { width: 5, height: 5 },
+							shadowOpacity: 1,
+							shadowRadius: 1,
+						}}
+					>
+						<Pressable
+							style={styles.button}
+							onPress={() => {
+								Animated.timing(translateY, {
+									toValue: windowHeight,
+									duration: 500,
+									useNativeDriver: true,
+									delay: 200,
+								}).start(() => setGameStats(false));
+							}}
+						>
+							<ThemedText style={styles.text}>CONTINUE</ThemedText>
+						</Pressable>
+					</LinearGradient>
+				</View>
+				<View
+					style={{
+						width: '80%',
+						shadowColor: 'black',
+						shadowOffset: { width: 5, height: 5 },
+						shadowOpacity: 1,
+						shadowRadius: 1,
 					}}
 				>
-					<Text style={styles.text}>Quit Game</Text>
-				</Pressable>
+					<LinearGradient colors={['#ee8833', '#e9bb67']} style={{ width: '100%' }}>
+						<Pressable
+							style={styles.button}
+							onPress={() => {
+								Animated.timing(translateY, {
+									toValue: windowHeight,
+									duration: 500,
+									useNativeDriver: true,
+									delay: 200,
+								}).start(() => setGameStats(false));
+							}}
+						>
+							<ThemedText style={styles.text}>QUIT GAME</ThemedText>
+						</Pressable>
+					</LinearGradient>
+				</View>
 			</Animated.View>
 		</View>
 	);
@@ -173,17 +200,21 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		paddingVertical: 12,
 		paddingHorizontal: 32,
-		borderRadius: 4,
 		elevation: 3,
-		backgroundColor: 'black',
-		width: '80%',
+		borderWidth: 3,
+		borderColor: 'white',
+		width: '100%',
 	},
 	text: {
-		fontSize: 16,
+		fontSize: 19,
 		lineHeight: 21,
 		fontWeight: 'bold',
 		letterSpacing: 0.25,
 		color: 'white',
+		borderColor: 'red',
+		textShadowColor: 'black',
+		textShadowOffset: { width: 3, height: 3 },
+		textShadowRadius: 2,
 	},
 	gameBoxModalWrapper: {
 		height: '100%',
