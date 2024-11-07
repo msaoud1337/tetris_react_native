@@ -95,40 +95,9 @@ export default function HomeScreen() {
 
 	const GameStatsBox = isGamePaused && (
 		<View style={styles.gameBoxModalWrapper}>
-			<Animated.View
-				style={{
-					transform: [{ translateY }],
-					width: '100%',
-					height: '20%',
-					position: 'absolute',
-					backgroundColor: '#252c93',
-					top: 0,
-					left: 0,
-					zIndex: 1337,
-					justifyContent: 'center',
-					alignItems: 'center',
-					gap: 10,
-				}}
-			>
-				<View
-					style={{
-						width: '80%',
-						shadowColor: 'black',
-						shadowOffset: { width: 5, height: 5 },
-						shadowOpacity: 1,
-						shadowRadius: 1,
-					}}
-				>
-					<LinearGradient
-						colors={['#439648', '#89e46d']}
-						style={{
-							width: '100%',
-							shadowColor: 'black',
-							shadowOffset: { width: 5, height: 5 },
-							shadowOpacity: 1,
-							shadowRadius: 1,
-						}}
-					>
+			<Animated.View style={[styles.animatedBox, { transform: [{ translateY }] }]}>
+				<View style={styles.buttonsStack}>
+					<LinearGradient colors={['#439648', '#89e46d']} style={{ width: '100%' }}>
 						<Pressable
 							style={styles.button}
 							onPress={() => {
@@ -144,15 +113,7 @@ export default function HomeScreen() {
 						</Pressable>
 					</LinearGradient>
 				</View>
-				<View
-					style={{
-						width: '80%',
-						shadowColor: 'black',
-						shadowOffset: { width: 5, height: 5 },
-						shadowOpacity: 1,
-						shadowRadius: 1,
-					}}
-				>
+				<View style={styles.buttonsStack}>
 					<LinearGradient colors={['#ee8833', '#e9bb67']} style={{ width: '100%' }}>
 						<Pressable
 							style={styles.button}
@@ -224,5 +185,24 @@ const styles = StyleSheet.create({
 		top: 0,
 		left: 0,
 		backgroundColor: 'rgba(0, 0, 0, .5)',
+	},
+	animatedBox: {
+		width: '100%',
+		height: '20%',
+		position: 'absolute',
+		backgroundColor: '#252c93',
+		top: 0,
+		left: 0,
+		zIndex: 1337,
+		justifyContent: 'center',
+		alignItems: 'center',
+		gap: 10,
+	},
+	buttonsStack: {
+		width: '80%',
+		shadowColor: 'black',
+		shadowOffset: { width: 5, height: 5 },
+		shadowOpacity: 1,
+		shadowRadius: 1,
 	},
 });
